@@ -1,0 +1,1 @@
+rootProject.name = "com.github.dillonredding.verifiable-data-registry"
