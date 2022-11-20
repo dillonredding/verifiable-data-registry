@@ -33,7 +33,12 @@ fun Route.configureIssuerRoutes() {
         }
 
         get("{id}/did.json") {
-            
+            val id = call.parameters.getOrFail("id").toUUID()
+            val didDoc = IssuerService.didDocFor(id) ?: return@get call.respondText(
+                "No issuer found with ID $id",
+                status = HttpStatusCode.NotFound
+            )
+            call.respond(didDoc)
         }
     }
 }

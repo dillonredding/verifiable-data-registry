@@ -1,8 +1,10 @@
 package com.github.dillonredding.services
 
 import com.github.dillonredding.db.issuerRepository
+import com.github.dillonredding.models.DidDoc
 import com.github.dillonredding.models.Issuer
 import com.github.dillonredding.models.RegisterIssuerDto
+import com.github.dillonredding.models.VerificationMethod
 import java.util.UUID
 
 object IssuerService {
@@ -17,15 +19,15 @@ object IssuerService {
 
     suspend fun didDocFor(id: UUID) =
         this.findById(id)?.let {
-            mapOf(
-                "@context" to "https://www.w3.org/ns/did/v1",
-                "id" to "did:web:localhost%3A8080:issuers:$id",
-                "verificationMethod" to mapOf(
-                    "id" to "",
-                    "type" to "",
-                    "controller" to "",
-                    "publicKeyMultibase" to it.publicKey
-                )
+            val did = "did:web:localhost%3A8080:issuers:$id"
+            DidDoc(
+                id = did,
+                verificationMethods = listOf(VerificationMethod(
+                    id = "$did#public-key",
+                    type = "FooBar",
+                    controller = did,
+                    publicKeyMultibase = "-----BEGIN PUBLIC KEY-----foobar-----END PUBLIC KEY-----"
+                ))
             )
         }
 }
